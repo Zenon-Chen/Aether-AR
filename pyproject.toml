@@ -3,7 +3,7 @@ requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "aether-mate"
+name = "aether-ar"
 version = "0.1.0"
 description = "Autonomous multimodal voice assistant powered by Omni model, long-term memory system, and lightweight Agent backend with easy edge deployment."
 readme = "README.md"
@@ -35,7 +35,7 @@ dev = [
 ]
 
 [project.scripts]
-aether-mate = "launcher:main"
+aether-ar = "launcher:main"
 
 [tool.setuptools]
 py-modules = ["launcher"]

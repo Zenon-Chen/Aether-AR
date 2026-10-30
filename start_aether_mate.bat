@@ -4,7 +4,7 @@ setlocal
 cd /d "%~dp0"
 
 echo ========================================================
-echo   AetherMate - Quick Bootstrap ^& Launcher
+echo   Aether-AR - Quick Bootstrap ^& Launcher
 echo ========================================================
 
 if not exist ".venv\Scripts\python.exe" (

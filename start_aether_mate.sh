@@ -3,7 +3,7 @@ set -e
 cd "$(dirname "$0")"
 
 if [ ! -x ".venv/bin/python" ]; then
-    echo "[Setup] Initializing virtual environment for AetherMate..."
+    echo "[Setup] Initializing virtual environment for Aether-AR..."
     if command -v uv >/dev/null 2>&1; then
         uv venv --python 3.11
         uv pip install -e ".[edge]"

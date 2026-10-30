@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AetherMate Quick Launcher & Connectivity Verifier (GUI + CLI).
+Aether-AR Quick Launcher & Connectivity Verifier (GUI + CLI).
 
 Features:
   - Configure API Endpoint (`OMNI_API_BASE`), API Key (`OMNI_API_KEY`), Model ID (`OMNI_MODEL`),
@@ -86,7 +86,7 @@ def save_env_dict(values: dict[str, str], env_path: Path = ENV_PATH) -> None:
     merged = dict(DEFAULT_ENV_VALUES)
     merged.update({k: str(v).strip() for k, v in values.items()})
     lines = [
-        "# Generated & verified by AetherMate Launcher",
+        "# Generated & verified by Aether-AR Launcher",
         f"OMNI_API_BASE={merged['OMNI_API_BASE']}",
         f"OMNI_API_KEY={merged['OMNI_API_KEY']}",
         f"OMNI_MODEL={merged['OMNI_MODEL']}",
@@ -137,7 +137,7 @@ class VerificationReport:
 def _http_json_post(url: str, api_key: str, payload: dict[str, Any], timeout: float = 15.0) -> tuple[int, dict[str, Any]]:
     headers = {
         "Content-Type": "application/json",
-        "User-Agent": "AetherMate-Launcher/0.1",
+        "User-Agent": "Aether-AR-Launcher/0.1",
     }
     if api_key:
         headers["Authorization"] = f"Bearer {api_key}"
@@ -313,7 +313,7 @@ async def verify_configuration(
             _http_json_post,
             f"{api_base}/embeddings",
             api_key,
-            {"model": emb_model, "input": "AetherMate memory vector probe"},
+            {"model": emb_model, "input": "Aether-AR memory vector probe"},
         )
         dt_ms = (time.perf_counter() - t1) * 1000.0
         if st == 200 and body.get("data"):
@@ -409,7 +409,7 @@ def run_gui_launcher() -> None:
     env_data = load_env_dict()
 
     root = tk.Tk()
-    root.title("AetherMate · 全模态主动式语音助手启动器")
+    root.title("Aether-AR · 全模态主动式语音助手启动器")
     root.geometry("880x680")
     root.minsize(780, 600)
     root.configure(bg="#0b101b")
@@ -434,7 +434,7 @@ def run_gui_launcher() -> None:
     # Header
     hdr = ttk.Frame(root)
     hdr.pack(fill="x", padx=18, pady=(14, 6))
-    ttk.Label(hdr, text="AETHER-MATE · 快捷配置与全链路启动台", style="Header.TLabel").pack(side="left")
+    ttk.Label(hdr, text="AETHER-AR · 快捷配置与全链路启动台", style="Header.TLabel").pack(side="left")
     status_lbl = ttk.Label(hdr, text="● 待验证 / 未启动", style="Sub.TLabel")
     status_lbl.pack(side="right", pady=4)
 
@@ -654,7 +654,7 @@ def run_gui_launcher() -> None:
         if not running_procs:
             log_msg("当前没有正在运行的服务进程。")
             return
-        log_msg("正在停止所有 AetherMate 服务进程...")
+        log_msg("正在停止所有 Aether-AR 服务进程...")
         while running_procs:
             p = running_procs.pop()
             try:
@@ -671,7 +671,7 @@ def run_gui_launcher() -> None:
     btn_verify = ttk.Button(bar, text="🔍 验证 API 可用性并保存", style="Accent.TButton", command=lambda: do_verify_async(False))
     btn_verify.pack(side="left", padx=(0, 10))
 
-    btn_launch = ttk.Button(bar, text="🚀 验证并一键启动 AetherMate", style="Launch.TButton", command=lambda: do_verify_async(True))
+    btn_launch = ttk.Button(bar, text="🚀 验证并一键启动 Aether-AR", style="Launch.TButton", command=lambda: do_verify_async(True))
     btn_launch.pack(side="left", padx=(0, 10))
 
     btn_stop = ttk.Button(bar, text="⏹ 停止服务", style="Stop.TButton", command=stop_processes)
@@ -701,7 +701,7 @@ def run_gui_launcher() -> None:
     scroll.pack(side="right", fill="y")
     txt_console.pack(side="left", fill="both", expand=True)
 
-    log_msg("欢迎使用 AetherMate 启动台。请确认上方 API 端点与密钥，点击【验证 API 可用性并保存】或【验证并一键启动】。")
+    log_msg("欢迎使用 Aether-AR 启动台。请确认上方 API 端点与密钥，点击【验证 API 可用性并保存】或【验证并一键启动】。")
 
     def _poll_logs() -> None:
         while True:
@@ -740,7 +740,7 @@ def run_cli_wizard(verify_only: bool = False, cli_overrides: dict[str, str] | No
 
     if not verify_only:
         print("=" * 66)
-        print("  AetherMate · 交互式配置与连通性自检向导 (CLI Mode)")
+        print("  Aether-AR · 交互式配置与连通性自检向导 (CLI Mode)")
         print("=" * 66)
         cur_base = env_cfg.get("OMNI_API_BASE", "")
         inp_base = input(f"1. API 端点 Base URL [{cur_base}]: ").strip()
@@ -777,7 +777,7 @@ def run_cli_wizard(verify_only: bool = False, cli_overrides: dict[str, str] | No
     if verify_only:
         return 0
 
-    ans = input("\n是否立即启动 AetherMate 中枢与本机边缘端？[Y/n]: ").strip().lower()
+    ans = input("\n是否立即启动 Aether-AR 中枢与本机边缘端？[Y/n]: ").strip().lower()
     if ans in ("", "y", "yes"):
         port = env_cfg.get("PORT", "8765")
         srv = subprocess.Popen([sys.executable, "-u", "-m", "server.main"], cwd=str(PROJECT_ROOT))
@@ -795,7 +795,7 @@ def run_cli_wizard(verify_only: bool = False, cli_overrides: dict[str, str] | No
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="AetherMate Quick Launcher & API Verifier")
+    parser = argparse.ArgumentParser(description="Aether-AR Quick Launcher & API Verifier")
     parser.add_argument("--cli", action="store_true", help="Run interactive terminal wizard instead of GUI")
     parser.add_argument("--verify-only", action="store_true", help="Verify current/provided API config and exit")
     parser.add_argument("--api-base", help="Override OMNI_API_BASE")

@@ -93,7 +93,7 @@ def create_app(
         yield
         await coord.stop()
 
-    app = FastAPI(title="AetherMate Brain Gateway", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(title="Aether-AR Brain Gateway", version="0.1.0", lifespan=lifespan)
     app.state.config = cfg
     app.state.coordinator = coord
     app.state.hub = hub
@@ -104,7 +104,7 @@ def create_app(
     async def serve_web_terminal():
         if web_index.exists():
             return FileResponse(str(web_index), media_type="text/html")
-        return HTMLResponse("<h1>AetherMate Gateway Running</h1>")
+        return HTMLResponse("<h1>Aether-AR Gateway Running</h1>")
 
     @app.get("/api/health")
     async def health_check():
