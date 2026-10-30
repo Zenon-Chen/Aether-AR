@@ -201,6 +201,67 @@ class DurableOutboxAndEpisodeStore:
             ).fetchone()
             return int(row["cnt"]) if row else 0
 
+    def search_dialogue_and_facts(self, query: str, limit: int = 4) -> list[str]:
+        """
+        Fast local lexical / CJK bigram search over durable outbox history (`fact`, `dialogue`, `observation`).
+        Ensures 0ms immediate recall of turns in ultra-long contexts even before background vector indexing finishes,
+        and provides exact-match recall for specific numbers, codes, or identifiers.
+        """
+        cleaned = query.strip()
+        if not cleaned:
+            return []
+        tokens = [t for t in cleaned.replace('"', " ").split() if len(t) >= 2]
+        cjk_chars = [c for c in cleaned if "\u4e00" <= c <= "\u9fff"]
+        stop_bigrams = {"什么", "在哪", "哪里", "多少", "怎么", "请问", "记得", "告诉", "我的", "主人", "当时", "之前"}
+        sub_terms: list[str] = []
+        for t in tokens:
+            if t not in stop_bigrams and t not in sub_terms:
+                sub_terms.append(t)
+        if len(cjk_chars) >= 2:
+            for i in range(len(cjk_chars) - 1):
+                bg = cjk_chars[i] + cjk_chars[i + 1]
+                if bg not in stop_bigrams and bg not in sub_terms:
+                    sub_terms.append(bg)
+
+        if not sub_terms:
+            return []
+
+        clauses = ["payload_json LIKE ?" for _ in sub_terms[:8]]
+        score_expr = " + ".join(
+            f"(CASE WHEN payload_json LIKE ? THEN 1 ELSE 0 END)" for _ in sub_terms[:8]
+        )
+        params: list[Any] = [f"%{t}%" for t in sub_terms[:8]] + [f"%{t}%" for t in sub_terms[:8]] + [limit * 2]
+
+        sql = (
+            f"SELECT kind, payload_json, ({score_expr}) AS match_score "
+            f"FROM memory_outbox WHERE {' OR '.join(clauses)} "
+            f"ORDER BY match_score DESC, id DESC LIMIT ?"
+        )
+        hits: list[str] = []
+        seen: set[str] = set()
+        with self._lock:
+            rows = self._conn.execute(sql, params).fetchall()
+            for r in rows:
+                try:
+                    data = json.loads(r["payload_json"])
+                    if isinstance(data, list):
+                        text = " | ".join(
+                            f"{m.get('role', '')}: {m.get('content', '')}"
+                            for m in data
+                            if isinstance(m, dict)
+                        )
+                    else:
+                        text = str(data)
+                except Exception:
+                    text = str(r["payload_json"])
+                compact = " ".join(text.split())[:220]
+                if compact and compact not in seen:
+                    seen.add(compact)
+                    hits.append(compact)
+                    if len(hits) >= limit:
+                        break
+        return hits
+
     # -------------------------------------------------------------------------
     # Visual & Spatio-Temporal Episodes
     # -------------------------------------------------------------------------
