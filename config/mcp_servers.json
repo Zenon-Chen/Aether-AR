@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "ambient_utilities": {
+      "command": "python",
+      "args": ["-m", "kernel.builtin_mcp_demo"],
+      "description": "内置演示扩展 MCP 服务（提供环境系统状态、实时世界时钟/日历节气、本地备忘录便签等标准 MCP 工具，可随时在 mcp_servers.json 中增删任意第三方 stdio/sse/http MCP 服务）",
+      "enabled": true
+    }
+  }
+}

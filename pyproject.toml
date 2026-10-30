@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aether-mate"
+version = "0.1.0"
+description = "Sci-fi proactive full-duplex multimodal voice agent powered by Qwen-Omni, thin Pi Kernel, Universal MCP, and zero-blocking Tencent Hy-Memory 2.0."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dependencies = [
+    "openai>=1.50.0",
+    "websockets>=13.0",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "httpx>=0.27.0",
+    "hy-memory>=2.0.0",
+    "mcp>=1.2.0",
+    "pyyaml>=6.0.1",
+    "python-dotenv>=1.0.1",
+    "pillow>=10.3.0",
+    "numpy>=1.26.4",
+    "croniter>=2.0.5",
+]
+
+[project.optional-dependencies]
+edge = [
+    "opencv-python-headless>=4.9.0",
+    "sounddevice>=0.4.6",
+]
+dev = [
+    "pytest>=8.2.0",
+    "pytest-asyncio>=0.23.7",
+]
+
+[project.scripts]
+aether-mate = "launcher:main"
+
+[tool.setuptools]
+py-modules = ["launcher"]
+
+[tool.setuptools.packages.find]
+include = ["config*", "protocol*", "memory*", "kernel*", "omni*", "server*", "edge*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+pythonpath = ["."]

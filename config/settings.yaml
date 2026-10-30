@@ -1,0 +1,49 @@
+# Ambient Omni-Agent Runtime Policy & Tuning
+assistant:
+  name: "Jarvis"
+  persona: >
+    你是一个自然融入物理房间、像科幻电影中一样敏锐而克制的全模态智能管家。
+    你能通过房间的摄像头看到环境与动作变化，通过麦克风阵列倾听并直接用自然语音交流。
+    说话风格简练、温暖、有分寸感，像熟悉主人生活习惯的老朋友，绝不啰嗦或机械播报。
+
+perception:
+  # Edge pixel-diff threshold (0.0 ~ 1.0) triggering visual upload
+  edge_motion_threshold: 0.025
+  # Periodic heartbeat interval (seconds) when room appears completely static
+  edge_heartbeat_sec: 30.0
+  # Minimum interval between Perceptual Pulse VLM evaluations (token bucket protection)
+  pulse_min_interval_sec: 4.0
+  # Number of recent frames stitched into Temporal Contact Sheet for motion/action understanding
+  temporal_grid_frames: 3
+  # Safety guardrail: minimum cooldown between purely unsolicited proactive engagements
+  proactive_min_cooldown_sec: 20.0
+
+duplex:
+  # Audio sample rates
+  uplink_sample_rate: 16000
+  downlink_sample_rate: 24000
+  # Pre-roll audio buffer (ms) kept during AMBIENT_WATCH so waking on speech loses zero syllables
+  preroll_buffer_ms: 800
+  # RMS audio threshold (int16 normalized 0~1) that wakes LIVE_DUPLEX from AMBIENT_WATCH
+  audio_wake_rms_threshold: 0.018
+  # Return from LIVE_DUPLEX to AMBIENT_WATCH after quiet inactivity (seconds)
+  duplex_idle_sleep_sec: 45.0
+  # Seamless session rotation threshold (seconds) before provider WebSocket timeout
+  session_rotate_sec: 840.0
+  # Video compression mode for qwen3.8-omni-flash-realtime ("normal" saves tokens, "none" max detail)
+  video_representation_compact: "normal"
+
+memory:
+  # Token/character budget for L0 Hot Working Context injected into Realtime session
+  max_hot_context_chars: 2200
+  max_prefetched_items: 6
+  # Rolling dialogue compaction trigger (number of turns before sidecar summarizes older turns)
+  compaction_turn_threshold: 8
+  # Speculative prefetch LRU cache TTL (seconds)
+  prefetch_cache_ttl_sec: 180.0
+  # Background outbox flush interval (seconds)
+  outbox_flush_interval_sec: 3.0
+
+kernel:
+  max_tool_steps: 10
+  python_exec_timeout_sec: 15.0
