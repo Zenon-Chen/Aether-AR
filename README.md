@@ -28,14 +28,14 @@
 双击运行或在终端执行（首次运行会自动创建 `.venv` 虚拟环境并安装依赖）：
 
 ```powershell
-.\start_aether_mate.bat
+.\start_aether_ar.bat
 ```
 
 ### Linux / macOS / 边缘设备一键启动
 
 ```bash
-chmod +x start_aether_mate.sh
-./start_aether_mate.sh
+chmod +x start_aether_ar.sh
+./start_aether_ar.sh
 ```
 
 ### 命令行交互向导 (CLI) 与静默验证
