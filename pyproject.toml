@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "aether-mate"
 version = "0.1.0"
-description = "Sci-fi proactive full-duplex multimodal voice agent powered by Qwen-Omni, thin Pi Kernel, Universal MCP, and zero-blocking Tencent Hy-Memory 2.0."
+description = "Autonomous multimodal voice assistant powered by Omni model, long-term memory system, and lightweight Agent backend with easy edge deployment."
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.11"
